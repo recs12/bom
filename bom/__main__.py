@@ -2,40 +2,40 @@
 # Ratio =  1 inches / 0.0254 Meters
 
 import sys
-from api import Api
+from api import Api, raw_input
 
 
 def correct_bom():
     try:
         session = Api()
-        print("Author: recs@premiertech.com")
-        print("Maintainer: Rechdi, Slimane")
-        print("Last update: 2020-05-01")
+        print("- Author: recs@premiertech.com")
+        print("- Last update: 2020-05-01")
         session.check_valid_version("Solid Edge ST7", "Solid Edge 2019")
         draft = session.active_document()
-        print("part: %s\n" % draft.name)
+        print("Document Number: %s\n" % draft.name)
         assert draft.name.lower().endswith(".dft"), (
-            "This macro only works on .psm not %s" % draft.name[-4:]
+            "This macro only works on draft document not %s" % draft.name[-4:]
         )
 
         if draft.PartsLists.Count == 1:
 
-            print("Max number of rows:")
+            print("\nMax number of rows:")
             print(
-                "- First Page..................: %s"
+                "  \t- First Page..................: %s"
                 % draft.PartsLists[1].MaximumRowsFirstPage
             )
             print(
-                "- Additional Page.............: %s"
+                "  \t- Additional Page.............: %s"
                 % draft.PartsLists[1].MaximumRowsAdditionalPages
             )
 
             print("\nMax height:")
             mhfp = draft.PartsLists[1].MaximumHeightFirstPage
             mhap = draft.PartsLists[1].MaximumHeightAdditionalPages
-            print("- First Page..................: %s" % mhfp)
-            print("- Additional Page.............: %s" % mhap)
-            print("\n----------------------------------------\n")
+            print("\t- First Page..................: %s" % mhfp)
+            print("\t- Additional Page.............: %s" % mhap)
+            print("\n")
+            print("\t\t****************")
 
             response = raw_input(
                 "Would you like to overwrite the rows with 100-100? [y/Y]es:\n>"
@@ -48,32 +48,33 @@ def correct_bom():
 
             draft.PartsLists[1].MaximumRowsFirstPage = 100
             draft.PartsLists[1].MaximumRowsAdditionalPages = 100
-            print("Overwrite rows with 100-100: done")
+            print("Overwrite rows with 100-100: \tdone")
 
             mhfp, mhap = 0.1778, 0.1778
-            # mhfp, mhap =  35*0.030 , 35*0.030
-            # mhfp, mhap =  toMeter(mhfp), toMeter(mhfp)
             draft.PartsLists[1].MaximumHeightFirstPage = mhfp
             draft.PartsLists[1].MaximumHeightAdditionalPages = mhap
-            print("Overwrite heights: done")
+            print("Overwrite heights: \tdone")
 
-            print("\n-----------------------------------------------------------------")
+            print("\n")
+            print("\t\t****************")
+            print("\n")
             print("Max number of rows:")
             print(
-                "- First Page..................: %s"
+                "\t- First Page..................: %s"
                 % draft.PartsLists[1].MaximumRowsFirstPage
             )
             print(
-                "- Additional Page.............: %s"
+                "\t- Additional Page.............: %s"
                 % draft.PartsLists[1].MaximumRowsAdditionalPages
             )
+            print("\n")
             print("Max height:")
             print(
-                "- First Page..................: %s"
+                "\t- First Page..................: %s"
                 % draft.PartsLists[1].MaximumHeightFirstPage
             )
             print(
-                "- Additional Page.............: %s"
+                "\t- Additional Page.............: %s"
                 % draft.PartsLists[1].MaximumHeightAdditionalPages
             )
 
@@ -89,16 +90,8 @@ def correct_bom():
         sys.exit()
 
 
-def toInch(meters):
-    return meters * 0.0254
-
-
-def toMeter(inches):
-    return inches / 0.0254
-
-
 def confirmation(func):
-    response = raw_input("""Replace background, (Press y/[Y] to proceed.): """)
+    response = raw_input("""Correct the display of BOM for manuals, (Press y/[Y] to proceed.): """)
     if response.lower() not in ["y"]:
         print("Process canceled")
         sys.exit()

@@ -8,10 +8,15 @@ import clr
 
 clr.AddReference("Interop.SolidEdge")
 clr.AddReference("System.Runtime.InteropServices")
+clr.AddReference("System")
 
+from System import Console
 import System.Runtime.InteropServices as SRI
 
 
+def raw_input(message):
+    Console.WriteLine(message)
+    return Console.ReadLine()
 class Api:
     def __init__(self):
         # Connect to a running instance of Solid Edge
